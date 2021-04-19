@@ -8,17 +8,8 @@ const closeModalBtn = modalRef.querySelector('.lightbox__button');
 const backdropRef = document.querySelector('.lightbox__overlay');
 const allImagesRef = document.querySelectorAll('.gallery__image');
 
-
-const imagesMarkup = createGalleryMarkup(images);
-
-galleryListRef.insertAdjacentHTML('beforeend', imagesMarkup);
-
-galleryListRef.addEventListener('click', onGalleryClick);
-closeModalBtn.addEventListener('click', onCloseModalBtn);
-backdropRef.addEventListener('click', onBackdropCloseModal);
-
-function createGalleryMarkup(images) {
-    return images.map(({ preview, original, description }) => {
+function createGalleryMarkup(items) {
+    return items.map(({ preview, original, description }) => {
         return `
     <li class="gallery__item">
         <a
@@ -33,10 +24,19 @@ function createGalleryMarkup(images) {
             />
         </a>
     </li>
-    `;
-    }).join('');
-
+    `})
+    .join('');
 }
+
+const imagesMarkup = createGalleryMarkup(images);
+
+galleryListRef.insertAdjacentHTML('beforeend', imagesMarkup);
+
+galleryListRef.addEventListener('click', onGalleryClick);
+closeModalBtn.addEventListener('click', onCloseModalBtn);
+backdropRef.addEventListener('click', onBackdropCloseModal);
+
+
 function onGalleryClick(event) {
     event.preventDefault();
 
@@ -47,13 +47,24 @@ function onGalleryClick(event) {
 
     modalRef.classList.add('is-open');
 
-    modalImage.src = event.target.dataset.source;
-    window.addEventListener('keydown',onEscKeyDown);
+    const galleryItem = event.target;
+    const imgLink = galleryItem.dataset.source;
+    const imgDescr = galleryItem.alt;
+
+    setItemLink(imgLink, imgDescr);
 }
+
+function setItemLink(link, descr) {
+    modalImage.src = link;
+    modalImage.alt = descr;
+}
+
+window.addEventListener('keydown',onEscKeyDown);
 
 function onCloseModalBtn() {
     modalRef.classList.remove('is-open');
-    modalImage.src = '';
+    modalImage.src = "";
+    modalImage.alt = "";
     window.removeEventListener('keydown',onEscKeyDown);
 }
 function onBackdropCloseModal(event){
