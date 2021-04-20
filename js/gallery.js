@@ -63,8 +63,7 @@ window.addEventListener('keydown',onEscKeyDown);
 
 function onCloseModalBtn() {
     modalRef.classList.remove('is-open');
-    modalImage.src = "";
-    modalImage.alt = "";
+    setItemLink("","");
     window.removeEventListener('keydown',onEscKeyDown);
 }
 function onBackdropCloseModal(event){
